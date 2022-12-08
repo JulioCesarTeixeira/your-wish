@@ -31,7 +31,7 @@ export function AuthContextProvider({
   const [currentUser, setCurrentUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
-  function signUp(email: string, password: string) {
+  async function signUp(email: string, password: string) {
     console.log("signUp", email, password);
     setCurrentUser({
       userId: 1,
@@ -41,7 +41,7 @@ export function AuthContextProvider({
     });
     return Promise.resolve();
   }
-  function signIn(email: string, password: string) {
+  async function signIn(email: string, password: string) {
     console.log("signUp", email, password);
     setCurrentUser({
       userId: 1,
@@ -51,7 +51,7 @@ export function AuthContextProvider({
     });
     return Promise.resolve();
   }
-  function logout() {
+  async function logout() {
     setCurrentUser(null);
     return Promise.resolve();
   }
