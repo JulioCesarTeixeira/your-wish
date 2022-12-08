@@ -1,4 +1,5 @@
 //auth context
+import axios from "axios";
 import React, { useState, useEffect, useContext } from "react";
 
 export type User = {
@@ -29,7 +30,7 @@ export function AuthContextProvider({
   children: React.ReactNode | React.ReactNode;
 }) {
   const [currentUser, setCurrentUser] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   async function signUp(email: string, password: string) {
     console.log("signUp", email, password);
@@ -42,14 +43,22 @@ export function AuthContextProvider({
     return Promise.resolve();
   }
   async function signIn(email: string, password: string) {
+    setLoading(true);
     console.log("signUp", email, password);
-    setCurrentUser({
-      userId: 1,
-      email: email,
-      name: "John Doe",
-      isEmailVerified: true,
-    });
-    return Promise.resolve();
+    try {
+      const res = await axios.post("/api/auth/signInHandler", { email, password
+      });
+      console.log("res", res.data);
+      setCurrentUser(res.data);
+    }
+    catch(err) {
+      console.log("err", err);
+      setCurrentUser(null);
+    }
+    finally {
+      setLoading(false);
+    }
+    
   }
   async function logout() {
     setCurrentUser(null);
