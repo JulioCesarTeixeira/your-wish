@@ -1,7 +1,6 @@
 // components/layout.js
-
-import React from 'react';
-import Navbar from '../common/Navbar'
+import React from 'react'
+import Navbar from '../Navbar'
 
 type LayoutProps = {
   children: React.ReactNode | React.ReactNode;
