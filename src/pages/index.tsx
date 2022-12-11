@@ -2,7 +2,7 @@
 import Head from "next/head";
 import Link from "next/link";
 import { ReactElement } from "react";
-import Layout from "../components/Layout";
+import Layout from "../components/common/Layout";
 // import { NextPageWithLayout } from "./_app";
 
 const products = [
@@ -48,10 +48,8 @@ const Home = () => {
         <meta name="description" content="Julio's e-commerce experiment" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <div className="grid sm:grid-cols-2 gap-4">
-        <Link href={"/login"}>Login</Link>
-      </div>
-      <div className="bg-white">
+     
+      <div className="bg-white z-0">
       <div className="mx-auto max-w-2xl py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8">
         <h2 className="sr-only">Products</h2>
 
