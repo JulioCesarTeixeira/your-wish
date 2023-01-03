@@ -2,8 +2,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 type RequestData = {
-  email: string;
-  password: string;
+  credentials: Record<"username" | "password", string> | undefined
 }
 
 type ResponseData = {
@@ -18,10 +17,10 @@ export default function handler(
   res: NextApiResponse<ResponseData>
 ) {
   console.log("request received :", req.body)
-  const {email, password} = req.body as RequestData
+  const {credentials} = req.body as RequestData
   const user = {
     userId: 1,
-    email: email,
+    email: credentials?.username ?? "johndoe@gmail.com",
     name: "John Doe",
     isEmailVerified: true,
   }

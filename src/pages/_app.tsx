@@ -1,15 +1,19 @@
+import { SessionProvider } from "next-auth/react"
 import "../styles/global.css";
 import type { AppProps } from "next/app";
 import { AuthContextProvider } from "../contexts/AuthContext";
 import Layout from "../components/common/Layout";
+import { Session } from "next-auth";
 
-export default function App({ Component, pageProps }: AppProps) {
+export default function App({ Component,  pageProps: { session, ...pageProps } }: AppProps<{ session: Session }>) {
   return (
+    <SessionProvider session={session}>
     <AuthContextProvider>
       <Layout>
       <Component {...pageProps} />
       </Layout>
     </AuthContextProvider>
+    </SessionProvider>
   );
 }
 // import type { ReactElement, ReactNode } from 'react'

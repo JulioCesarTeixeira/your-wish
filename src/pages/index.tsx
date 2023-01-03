@@ -3,6 +3,7 @@ import Head from "next/head";
 import Link from "next/link";
 import { ReactElement } from "react";
 import Layout from "../components/common/Layout";
+import { useSession } from "next-auth/react";
 // import { NextPageWithLayout } from "./_app";
 
 const products = [
@@ -41,6 +42,8 @@ const products = [
   // More products...
 ]
 const Home = () => {
+  const {data} = useSession()
+  console.log(data)
   return (
     <div>
       <Head>
