@@ -1,13 +1,14 @@
 import Image from "next/image";
-import TextfieldInput from "../components/form/TextfieldInput";
+import TextfieldInput from "../../components/form/TextfieldInput";
 import { useForm } from "react-hook-form";
 import { joiResolver } from "@hookform/resolvers/joi";
 import Joi from "joi";
 import { ErrorMessage } from "@hookform/error-message";
-import CheckboxInput from "../components/form/CheckboxInput";
-import Button from "../components/buttons/Button";
-import { useAuth } from "../contexts/AuthContext";
-import { paths } from "../constants/navigation";
+import CheckboxInput from "../../components/form/CheckboxInput";
+import Button from "../../components/buttons/Button";
+import { useAuth } from "../../contexts/AuthContext";
+import { paths } from "../../constants/navigation";
+import * as bcrypt from "bcrypt";
 
 interface ILoginForm {
   email: string;
@@ -33,7 +34,7 @@ const schema = Joi.object({
 });
 
 export default function SignUp() {
-  const {signIn} = paths;
+  const { signIn } = paths;
   const { currentUser, signUp } = useAuth();
   const {
     register,
@@ -51,7 +52,9 @@ export default function SignUp() {
   const onSubmit = async (data: ILoginForm) => {
     console.log("succsess", data);
     const { email, password } = data;
-    await signUp(email, password);
+
+    const hashedPassword = bcrypt.hashSync(password, 10);
+    await signUp(email, hashedPassword);
   };
 
   return (

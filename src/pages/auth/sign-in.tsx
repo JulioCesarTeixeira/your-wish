@@ -1,12 +1,12 @@
 import Image from "next/image";
-import TextfieldInput from "../components/form/TextfieldInput";
+import TextfieldInput from "../../components/form/TextfieldInput";
 import { useForm } from "react-hook-form";
 import { joiResolver } from "@hookform/resolvers/joi";
 import Joi from "joi";
 import { ErrorMessage } from "@hookform/error-message";
-import CheckboxInput from "../components/form/CheckboxInput";
-import Button from "../components/buttons/Button";
-import { useAuth } from "../contexts/AuthContext";
+import CheckboxInput from "../../components/form/CheckboxInput";
+import Button from "../../components/buttons/Button";
+import { useAuth } from "../../contexts/AuthContext";
 import { signIn, useSession } from "next-auth/react";
 
 interface ILoginForm {
