@@ -7,7 +7,7 @@ import { ErrorMessage } from "@hookform/error-message";
 import CheckboxInput from "../../components/form/CheckboxInput";
 import Button from "../../components/buttons/Button";
 import { useAuth } from "../../contexts/AuthContext";
-import { signIn, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 
 interface ILoginForm {
   email: string;
@@ -33,7 +33,7 @@ const schema = Joi.object({
 });
 
 export default function Login() {
-  const { currentUser } = useAuth();
+  const { currentUser, handleSignIn } = useAuth();
   const { data, status } = useSession();
 
   console.log("data", data);
@@ -54,18 +54,7 @@ export default function Login() {
   const onSubmit = async (data: ILoginForm) => {
     console.log("succsess", data);
     const { email, password } = data;
-    await signIn("credentials", {
-      email,
-      password,
-      redirect: true,
-      callbackUrl: "/",
-    })
-      .then((res) => {
-        console.log("res", res);
-      })
-      .catch((err) => {
-        console.log("err", err);
-      });
+    await handleSignIn(email, password);
   };
 
   return (

@@ -1,28 +1,48 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import type { NextApiRequest, NextApiResponse } from 'next'
+import { hashPassword } from "@/src/lib/encryption/hashPassword";
+import { isSamePassword } from "@/src/lib/encryption/isSamePassword";
+import prisma from "@/src/lib/prisma";
+import type { NextApiRequest, NextApiResponse } from "next";
 
 type RequestData = {
-  credentials: Record<"username" | "password", string> | undefined
-}
+  email: string;
+  password: string;
+  csrfToken: string;
+};
 
 type ResponseData = {
   userId: number;
   email: string;
   name: string;
   isEmailVerified: boolean;
-}
+};
 
-export default function handler(
+export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<ResponseData>
+  res: NextApiResponse
 ) {
-  console.log("request received :", req.body)
-  const {credentials} = req.body as RequestData
-  const user = {
-    userId: 1,
-    email: credentials?.username ?? "johndoe@gmail.com",
-    name: "John Doe",
-    isEmailVerified: true,
+  console.log("request received :", req.body);
+  const { email, password, csrfToken } = req.body as RequestData;
+
+  const psUser = await prisma.user.findUnique({
+    where: {
+      email: email,
+    },
+  });
+  if (!psUser) {
+    return res.status(404).json({ error: "User not found" });
   }
-  res.status(200).json(user)
+  const isSame = await isSamePassword(password, psUser.password);
+
+  if (!isSame) {
+    return res.status(401).json({ error: "Invalid password" });
+  }
+  const { id } = psUser;
+
+  const user = {
+    userId: id,
+    email: psUser.email,
+  };
+
+  res.status(200).json(user);
 }

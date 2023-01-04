@@ -1,5 +1,8 @@
 //auth context
+import { hashPassword } from "@/src/lib/encryption/hashPassword";
 import axios from "axios";
+import { signIn } from "next-auth/react";
+
 import React, { useState, useEffect, useContext } from "react";
 
 export type User = {
@@ -10,7 +13,7 @@ export type User = {
 
 type AuthContextType = {
   currentUser: User;
-  signIn: (email: string, password: string) => Promise<void>;
+  handleSignIn: (email: string, password: string) => Promise<void>;
   signUp: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
   // resetPassword: (email: string) => Promise<void>;
@@ -34,31 +37,40 @@ export function AuthContextProvider({
 
   async function signUp(email: string, password: string) {
     console.log("signUp", email, password);
-    setCurrentUser({
-      userId: 1,
-      email: email,
-      name: "John Doe",
-      isEmailVerified: true,
-    });
-    return Promise.resolve();
-  }
-  async function signIn(email: string, password: string) {
-    setLoading(true);
-    console.log("signUp", email, password);
+
     try {
-      const res = await axios.post("/api/auth/signInHandler", { email, password
+      const res = await axios.post("/api/users/create", {
+        credentials: {
+          email,
+          password,
+        },
       });
-      console.log("res", res.data);
+      console.log("res auth context", res.data.user);
+
+      await handleSignIn(email, password);
+
       setCurrentUser(res.data);
-    }
-    catch(err) {
+    } catch (err) {
       console.log("err", err);
       setCurrentUser(null);
     }
-    finally {
+  }
+  async function handleSignIn(email: string, password: string) {
+    setLoading(true);
+    console.log("signUp", email, password);
+    try {
+      await signIn("credentials", {
+        email,
+        password,
+        redirect: true,
+        callbackUrl: "/",
+      });
+    } catch (err) {
+      console.log("err", err);
+      setCurrentUser(null);
+    } finally {
       setLoading(false);
     }
-    
   }
   async function logout() {
     setCurrentUser(null);
@@ -66,7 +78,7 @@ export function AuthContextProvider({
   }
 
   return (
-    <AuthContext.Provider value={{ currentUser, signIn, signUp, logout }}>
+    <AuthContext.Provider value={{ currentUser, handleSignIn, signUp, logout }}>
       {children}
     </AuthContext.Provider>
   );

@@ -8,7 +8,6 @@ import CheckboxInput from "../../components/form/CheckboxInput";
 import Button from "../../components/buttons/Button";
 import { useAuth } from "../../contexts/AuthContext";
 import { paths } from "../../constants/navigation";
-import * as bcrypt from "bcrypt";
 
 interface ILoginForm {
   email: string;
@@ -53,8 +52,7 @@ export default function SignUp() {
     console.log("succsess", data);
     const { email, password } = data;
 
-    const hashedPassword = bcrypt.hashSync(password, 10);
-    await signUp(email, hashedPassword);
+    await signUp(email, password);
   };
 
   return (
