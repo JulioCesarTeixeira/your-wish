@@ -37,13 +37,13 @@ export default async function handler(
     },
   });
   if (!psUser) {
-    return res.status(404).json({ error: "User not found", success: false });
+    return res.status(200).json({ error: "User not found", success: false });
   }
   const isSame = await isSamePassword(password, psUser.password);
 
   if (!isSame) {
     return res
-      .status(401)
+      .status(200)
       .json({ error: "Invalid credentials", success: false });
   }
 

@@ -1,13 +1,14 @@
 import Image from "next/image";
 import TextfieldInput from "../../components/form/TextfieldInput";
-import { useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { joiResolver } from "@hookform/resolvers/joi";
 import Joi from "joi";
 import { ErrorMessage } from "@hookform/error-message";
 import CheckboxInput from "../../components/form/CheckboxInput";
 import Button from "../../components/buttons/Button";
 import { useAuth } from "../../contexts/AuthContext";
-import { useSession } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 
 interface ILoginForm {
   email: string;
@@ -34,13 +35,17 @@ const schema = Joi.object({
 
 export default function Login() {
   const { currentUser, handleSignIn } = useAuth();
+  const { push } = useRouter();
   const { data, status } = useSession();
 
+  console.log({ currentUser });
   console.log("data", data);
   console.log("status", status);
   const {
     register,
     handleSubmit,
+    setError,
+    clearErrors,
     formState: { errors },
   } = useForm<ILoginForm>({
     resolver: joiResolver(schema),
@@ -51,12 +56,31 @@ export default function Login() {
     },
   });
 
-  const onSubmit = async (data: ILoginForm) => {
-    console.log("succsess", data);
+  const onSubmit: SubmitHandler<ILoginForm> = async (data: ILoginForm, e) => {
+    e?.preventDefault();
+    clearErrors();
     const { email, password } = data;
-    await handleSignIn(email, password);
+    try {
+      const res = await signIn("credentials", {
+        email,
+        password,
+        redirect: false,
+      });
+
+      if (!res?.ok) {
+        console.log("front end", res);
+        return setError("password", {
+          type: "manual",
+          message: "Invalid email or password",
+        });
+      }
+      await push("/");
+    } catch (err) {
+      console.log("err", err);
+    }
   };
 
+  if (status === "loading") return <p>Loading...</p>;
   return (
     <>
       <div className="flex min-h-full items-center justify-center py-12 px-4 sm:px-6 lg:px-8">

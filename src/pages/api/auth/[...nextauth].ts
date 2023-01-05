@@ -24,7 +24,6 @@ export const authOptions: NextAuthOptions = {
           type: "text",
           placeholder: "test@your-wish.be",
           required: true,
-          autoComplete: "email",
         },
         password: { label: "Password", type: "password" },
       },
@@ -46,7 +45,7 @@ export const authOptions: NextAuthOptions = {
         const res = await axios.post(`${baseUrl}/api/auth/check-credentials`, {
           ...credentials,
         });
-        console.log("res", res);
+        console.log("res", res.data);
         const { user, success } = await res.data;
 
         // If no error and we have user data, return it
@@ -68,6 +67,10 @@ export const authOptions: NextAuthOptions = {
     strategy: "jwt",
   },
   callbacks: {
+    signIn(params) {
+      console.log("signIn", params);
+      return true;
+    },
     //add user id to token and return token
     jwt: async ({ token, user }) => {
       if (user) {
@@ -100,7 +103,7 @@ export const authOptions: NextAuthOptions = {
   pages: {
     signIn: "/auth/sign-in",
     signOut: "/auth/signout",
-    error: "/auth/error", // Error code passed in query string as ?error=
+    // error: "/auth/error", // Error code passed in query string as ?error=
   },
 };
 export default NextAuth(authOptions);

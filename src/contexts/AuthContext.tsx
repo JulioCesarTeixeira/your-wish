@@ -63,7 +63,7 @@ export function AuthContextProvider({
         email,
         password,
         // redirect: true,
-        callbackUrl: "/",
+        // callbackUrl: "/",
       });
     } catch (err) {
       console.log("err", err);
