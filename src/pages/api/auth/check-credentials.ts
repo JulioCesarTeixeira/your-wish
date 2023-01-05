@@ -2,6 +2,7 @@
 import { hashPassword } from "@/src/lib/encryption/hashPassword";
 import { isSamePassword } from "@/src/lib/encryption/isSamePassword";
 import prisma from "@/src/lib/prisma";
+import axios from "axios";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 type RequestData = {
@@ -10,19 +11,25 @@ type RequestData = {
   csrfToken: string;
 };
 
-type ResponseData = {
-  userId: number;
-  email: string;
-  name: string;
-  isEmailVerified: boolean;
-};
+// 1. Check if POST request
+// 2. Check if CSRF token is valid
+// 3. Check if user exists
+// 4. Check if password is correct
+// 5. Return user data
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  if (req.method !== "POST")
+    return res
+      .status(405)
+      .json({ error: "Method not allowed", success: false });
+
   console.log("request received :", req.body);
-  const { email, password, csrfToken } = req.body as RequestData;
+  const { email, password } = req.body as RequestData;
+
+  console.log("email :", email);
 
   const psUser = await prisma.user.findUnique({
     where: {
@@ -30,19 +37,20 @@ export default async function handler(
     },
   });
   if (!psUser) {
-    return res.status(404).json({ error: "User not found" });
+    return res.status(404).json({ error: "User not found", success: false });
   }
   const isSame = await isSamePassword(password, psUser.password);
 
   if (!isSame) {
-    return res.status(401).json({ error: "Invalid password" });
+    return res
+      .status(401)
+      .json({ error: "Invalid credentials", success: false });
   }
-  const { id } = psUser;
 
   const user = {
-    userId: id,
+    id: psUser.id,
     email: psUser.email,
   };
 
-  res.status(200).json(user);
+  res.status(200).json({ user, success: true });
 }

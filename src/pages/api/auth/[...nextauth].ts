@@ -2,6 +2,8 @@ import NextAuth, { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import prisma from "../../../lib/prisma";
+import getServerUrl from "@/src/helpers/getServerUrl";
+import axios from "axios";
 
 export const authOptions: NextAuthOptions = {
   debug: true,
@@ -34,18 +36,21 @@ export const authOptions: NextAuthOptions = {
         // You can also use the `req` object to obtain additional parameters
         // (i.e., the request IP address)
         console.log("credentials received", credentials);
-        const res = await fetch(
-          "http://localhost:3000/api/auth/signInHandler",
-          {
-            method: "POST",
-            body: JSON.stringify(credentials),
-            headers: { "Content-Type": "application/json" },
-          }
-        );
-        const user = await res.json();
+        const baseUrl = getServerUrl();
+        // const res = await fetch(`${baseUrl}/api/auth/check-credentials`, {
+        //   method: "POST",
+        //   body: JSON.stringify(credentials),
+        //   headers: { "Content-Type": "application/json" },
+        // });
+
+        const res = await axios.post(`${baseUrl}/api/auth/check-credentials`, {
+          ...credentials,
+        });
+        console.log("res", res);
+        const { user, success } = await res.data;
 
         // If no error and we have user data, return it
-        if (res.ok && user) {
+        if (success && user) {
           console.log("user", user);
           return user;
         }
@@ -61,6 +66,36 @@ export const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
   session: {
     strategy: "jwt",
+  },
+  callbacks: {
+    //add user id to token and return token
+    jwt: async ({ token, user }) => {
+      if (user) {
+        token.id = user.id;
+        token.email = user.email;
+      }
+      console.log({ token });
+      console.log({ user });
+      return token;
+    },
+    session: async ({ session, token }) => {
+      if (token) {
+        session.id = token.id;
+      }
+
+      return session;
+    },
+  },
+  logger: {
+    error(code, metadata) {
+      console.error(code, metadata);
+    },
+    warn(code) {
+      console.warn(code);
+    },
+    debug(code, metadata) {
+      console.debug(code, metadata);
+    },
   },
   pages: {
     signIn: "/auth/sign-in",

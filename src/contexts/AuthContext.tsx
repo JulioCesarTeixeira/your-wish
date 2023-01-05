@@ -62,7 +62,7 @@ export function AuthContextProvider({
       await signIn("credentials", {
         email,
         password,
-        redirect: true,
+        // redirect: true,
         callbackUrl: "/",
       });
     } catch (err) {
