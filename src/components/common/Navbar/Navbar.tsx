@@ -9,6 +9,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { navigation, paths } from "@/src/constants/navigation";
+import Link from "next/link";
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
@@ -18,6 +19,10 @@ export default function Navbar() {
   const { signUp, home } = paths;
   const { data: session } = useSession();
   const [open, setOpen] = useState(false);
+
+  function handleLinkClick() {
+    setOpen(false);
+  }
 
   return (
     <div className="bg-white z-50 relative">
@@ -144,36 +149,36 @@ export default function Navbar() {
                     ))}
                   </Tab.Panels>
                 </Tab.Group>
-
+                {/* Mobile Auth navigation */}
                 <div className="space-y-6 border-t border-gray-200 py-6 px-4">
                   {navigation.pages.map((page) => (
                     <div key={page.name} className="flow-root">
-                      <a
+                      <Link
                         href={page.href}
                         className="-m-2 block p-2 font-medium text-gray-900"
                       >
                         {page.name}
-                      </a>
+                      </Link>
                     </div>
                   ))}
                 </div>
 
                 <div className="space-y-6 border-t border-gray-200 py-6 px-4">
                   <div className="flow-root">
-                    <a
-                      href="#"
-                      className="-m-2 block p-2 font-medium text-gray-900"
+                    <button
+                      onClick={() => signIn()}
+                      className="text-sm font-medium text-gray-700 hover:text-gray-800"
                     >
                       Sign in
-                    </a>
+                    </button>
                   </div>
                   <div className="flow-root">
-                    <a
-                      href="#"
+                    <Link
+                      href={signUp}
                       className="-m-2 block p-2 font-medium text-gray-900"
                     >
                       Create account
-                    </a>
+                    </Link>
                   </div>
                 </div>
 
@@ -198,7 +203,7 @@ export default function Navbar() {
 
       <header className="relative bg-white">
         <p className="flex h-10 items-center justify-center bg-indigo-600 px-4 text-sm font-medium text-white sm:px-6 lg:px-8">
-          Get free delivery on orders over $100
+          Your Wish - Get free delivery on orders over $100
         </p>
 
         <nav
@@ -376,12 +381,12 @@ export default function Navbar() {
                       {session.user?.email}
                     </p>
                   ) : (
-                    <a
+                    <Link
                       href={signUp}
                       className="text-sm font-medium text-gray-700 hover:text-gray-800"
                     >
                       Create account
-                    </a>
+                    </Link>
                   )}
                 </div>
 

@@ -1,7 +1,8 @@
 //auth context
 import { hashPassword } from "@/src/lib/encryption/hashPassword";
 import axios from "axios";
-import { signIn } from "next-auth/react";
+import { Session } from "next-auth";
+import { signIn, useSession } from "next-auth/react";
 
 import React, { useState, useEffect, useContext } from "react";
 
@@ -16,6 +17,8 @@ type AuthContextType = {
   handleSignIn: (email: string, password: string) => Promise<void>;
   signUp: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
+  status: "loading" | "authenticated" | "unauthenticated";
+  session: Session | null;
   // resetPassword: (email: string) => Promise<void>;
   // updateEmail: (email: string) => Promise<void>;
   // updatePassword: (password: string) => Promise<void>;
@@ -32,6 +35,7 @@ export function AuthContextProvider({
 }: {
   children: React.ReactNode | React.ReactNode;
 }) {
+  const { data, status } = useSession();
   const [currentUser, setCurrentUser] = useState<any>(null);
   const [loading, setLoading] = useState(false);
 
@@ -78,7 +82,16 @@ export function AuthContextProvider({
   }
 
   return (
-    <AuthContext.Provider value={{ currentUser, handleSignIn, signUp, logout }}>
+    <AuthContext.Provider
+      value={{
+        currentUser,
+        handleSignIn,
+        signUp,
+        logout,
+        status,
+        session: data,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
