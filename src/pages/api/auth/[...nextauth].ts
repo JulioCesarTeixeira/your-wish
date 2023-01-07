@@ -6,7 +6,6 @@ import getServerUrl from "@/src/helpers/getServerUrl";
 import axios from "axios";
 
 export const authOptions: NextAuthOptions = {
-  debug: true,
   // Configure one or more authentication providers
   adapter: PrismaAdapter(prisma),
   providers: [
