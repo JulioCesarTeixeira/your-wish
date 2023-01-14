@@ -2,7 +2,7 @@ import NextAuth, { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import prisma from "../../../lib/prisma";
-import getServerUrl from "@/src/helpers/getServerUrl";
+import getServerUrl from "@src/helpers/getServerUrl";
 import axios from "axios";
 
 export const authOptions: NextAuthOptions = {
