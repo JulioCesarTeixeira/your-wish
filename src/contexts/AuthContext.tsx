@@ -1,5 +1,6 @@
 //auth context
-import { hashPassword } from "@/src/lib/encryption/hashPassword";
+import { ILogin, ISignUp } from "@src/common/validation/auth";
+import { hashPassword } from "@src/lib/encryption/hashPassword";
 import axios from "axios";
 import { Session } from "next-auth";
 import { signIn, useSession } from "next-auth/react";
@@ -14,8 +15,8 @@ export type User = {
 
 type AuthContextType = {
   currentUser: User;
-  handleSignIn: (email: string, password: string) => Promise<void>;
-  signUp: (email: string, password: string) => Promise<void>;
+  handleSignIn: (data: ILogin) => Promise<void>;
+  signUp: (data: ISignUp) => Promise<void>;
   logout: () => Promise<void>;
   status: "loading" | "authenticated" | "unauthenticated";
   session: Session | null;
@@ -39,7 +40,7 @@ export function AuthContextProvider({
   const [currentUser, setCurrentUser] = useState<any>(null);
   const [loading, setLoading] = useState(false);
 
-  async function signUp(email: string, password: string) {
+  async function signUp({ email, password, rememberMe }: ISignUp) {
     console.log("signUp", email, password);
 
     try {
@@ -51,7 +52,7 @@ export function AuthContextProvider({
       });
       console.log("res auth context", res.data.user);
 
-      await handleSignIn(email, password);
+      await handleSignIn({ email, password, rememberMe });
 
       setCurrentUser(res.data);
     } catch (err) {
@@ -59,7 +60,7 @@ export function AuthContextProvider({
       setCurrentUser(null);
     }
   }
-  async function handleSignIn(email: string, password: string) {
+  async function handleSignIn({ email, password }: ILogin) {
     setLoading(true);
     console.log("signUp", email, password);
     try {

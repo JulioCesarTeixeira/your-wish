@@ -1,36 +1,14 @@
 import Image from "next/image";
 import TextfieldInput from "../../components/form/TextfieldInput";
 import { useForm } from "react-hook-form";
-import { joiResolver } from "@hookform/resolvers/joi";
-import Joi from "joi";
+import { zodResolver } from "@hookform/resolvers/zod";
+
 import { ErrorMessage } from "@hookform/error-message";
 import CheckboxInput from "../../components/form/CheckboxInput";
 import Button from "../../components/buttons/Button";
 import { useAuth } from "../../contexts/AuthContext";
 import { paths } from "../../constants/navigation";
-
-interface ILoginForm {
-  email: string;
-  password: string;
-  rememberMe: boolean;
-}
-
-const schema = Joi.object({
-  email: Joi.string()
-    .email({
-      minDomainSegments: 1,
-      tlds: { allow: ["com", "net"] },
-    })
-    .messages({
-      "string.email": "Please enter a valid email address",
-      "string.empty": "Please enter your email address",
-    }),
-  password: Joi.string().min(6).required().messages({
-    "string.min": "Password must be at least 6 characters",
-    "string.empty": "Please enter your password",
-  }),
-  rememberMe: Joi.boolean().not().required(),
-});
+import { ISignUp, signUpSchema } from "@src/common/validation/auth";
 
 export default function SignUp() {
   const { signIn } = paths;
@@ -39,8 +17,8 @@ export default function SignUp() {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<ILoginForm>({
-    resolver: joiResolver(schema),
+  } = useForm<ISignUp>({
+    resolver: zodResolver(signUpSchema),
     defaultValues: {
       email: "",
       password: "",
@@ -48,11 +26,10 @@ export default function SignUp() {
     },
   });
 
-  const onSubmit = async (data: ILoginForm) => {
+  const onSubmit = async (data: ISignUp) => {
     console.log("succsess", data);
-    const { email, password } = data;
 
-    await signUp(email, password);
+    await signUp(data);
   };
 
   return (

@@ -1,6 +1,6 @@
 import * as trpc from "@trpc/server";
-import { signUpSchema } from "@/src/common/validation/auth";
-import { hashPassword } from "@/src/lib/encryption/hashPassword";
+import { signUpSchema } from "@src/common/validation/auth";
+import { hashPassword } from "@src/lib/encryption/hashPassword";
 import { router, publicProcedure } from "../trpc";
 
 export const userRouter = router({
