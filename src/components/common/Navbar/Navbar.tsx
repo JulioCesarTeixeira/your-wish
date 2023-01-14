@@ -8,7 +8,7 @@ import {
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 import { signIn, signOut, useSession } from "next-auth/react";
-import { navigation, paths } from "@/src/constants/navigation";
+import { navigation, paths } from "@src/constants/navigation";
 import Link from "next/link";
 
 function classNames(...classes: string[]) {

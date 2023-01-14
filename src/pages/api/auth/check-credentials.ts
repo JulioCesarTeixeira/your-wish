@@ -1,7 +1,7 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import { hashPassword } from "@/src/lib/encryption/hashPassword";
-import { isSamePassword } from "@/src/lib/encryption/isSamePassword";
-import prisma from "@/src/lib/prisma";
+import { hashPassword } from "@src/lib/encryption/hashPassword";
+import { isSamePassword } from "@src/lib/encryption/isSamePassword";
+import prisma from "@src/lib/prisma";
 import axios from "axios";
 import type { NextApiRequest, NextApiResponse } from "next";
 
