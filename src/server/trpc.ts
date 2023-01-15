@@ -1,19 +1,13 @@
 import { TRPCError, initTRPC } from "@trpc/server";
 import { Context } from "./context";
+import SuperJSON from "superjson";
 
 // Avoid exporting the entire t-object
 // since it's not very descriptive.
 // For instance, the use of a t variable
 // is common in i18n libraries.
 const t = initTRPC.context<Context>().create({
-  errorFormatter({ shape }) {
-    return {
-      ...shape,
-      data: {
-        ...shape.data,
-      },
-    };
-  },
+  transformer: SuperJSON,
 });
 
 /**

@@ -1,20 +1,17 @@
 //auth context
 import { ILogin, ISignUp } from "@src/common/validation/auth";
 import { hashPassword } from "@src/lib/encryption/hashPassword";
+import { AuthUser } from "@src/types/user";
+import { trpc } from "@src/utils/trpc";
+import { TRPCClientError } from "@trpc/client";
 import axios from "axios";
 import { Session } from "next-auth";
 import { signIn, useSession } from "next-auth/react";
 
 import React, { useState, useEffect, useContext } from "react";
 
-export type User = {
-  email?: string;
-  name?: string;
-  isEmailVerified?: boolean;
-};
-
 type AuthContextType = {
-  currentUser: User;
+  currentUser: AuthUser | null;
   handleSignIn: (data: ILogin) => Promise<void>;
   signUp: (data: ISignUp) => Promise<void>;
   logout: () => Promise<void>;
@@ -37,39 +34,67 @@ export function AuthContextProvider({
   children: React.ReactNode | React.ReactNode;
 }) {
   const { data, status } = useSession();
-  const [currentUser, setCurrentUser] = useState<any>(null);
+  const [currentUser, setCurrentUser] = useState<AuthUser | null>(null);
   const [loading, setLoading] = useState(false);
+  const { mutateAsync: signUpMutation } = trpc.user.signup.useMutation();
+  const { mutateAsync: signInMutation } = trpc.user.signIn.useMutation();
 
   async function signUp({ email, password, rememberMe }: ISignUp) {
     console.log("signUp", email, password);
 
     try {
-      const res = await axios.post("/api/users/create", {
-        credentials: {
-          email,
-          password,
-        },
-      });
-      console.log("res auth context", res.data.user);
+      setLoading(true);
+      // const res = await axios.post("/api/users/create", {
+      //   credentials: {
+      //     email,
+      //     password,
+      //   },
+      // });
+      // console.log("res auth context", data.user);
+
+      const { user } = await signUpMutation({ email, password });
+      console.log("auth context:  ", user);
 
       await handleSignIn({ email, password, rememberMe });
 
-      setCurrentUser(res.data);
-    } catch (err) {
-      console.log("err", err);
+      setCurrentUser({
+        email: user.email,
+        id: user.id,
+        name: user.name,
+        isEmailVerified: null,
+      });
+
+      return Promise.resolve();
+    } catch (err: any) {
+      console.log(
+        "auth context err",
+        err instanceof TRPCClientError ? "TRPC ERROR" : err
+      );
       setCurrentUser(null);
+      return Promise.reject(err);
+    } finally {
+      setLoading(false);
     }
   }
-  async function handleSignIn({ email, password }: ILogin) {
+  async function handleSignIn({ email, password, rememberMe }: ILogin) {
     setLoading(true);
     console.log("signUp", email, password);
     try {
-      await signIn("credentials", {
-        email,
-        password,
-        // redirect: true,
-        // callbackUrl: "/",
+      // await signIn("credentials", {
+      //   email,
+      //   password,
+      //   // redirect: true,
+      //   // callbackUrl: "/",
+      // });
+      const { user } = await signInMutation({ email, password, rememberMe });
+
+      setCurrentUser({
+        email: user.email,
+        id: user.id,
+        name: user.name,
+        isEmailVerified: null,
       });
+      return Promise.resolve();
     } catch (err) {
       console.log("err", err);
       setCurrentUser(null);

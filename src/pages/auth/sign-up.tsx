@@ -9,6 +9,8 @@ import Button from "../../components/buttons/Button";
 import { useAuth } from "../../contexts/AuthContext";
 import { paths } from "../../constants/navigation";
 import { ISignUp, signUpSchema } from "@src/common/validation/auth";
+import { trpc } from "@src/utils/trpc";
+import { DevTool } from "@hookform/devtools";
 
 export default function SignUp() {
   const { signIn } = paths;
@@ -17,6 +19,7 @@ export default function SignUp() {
     register,
     handleSubmit,
     formState: { errors },
+    setError,
   } = useForm<ISignUp>({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
@@ -27,11 +30,15 @@ export default function SignUp() {
   });
 
   const onSubmit = async (data: ISignUp) => {
-    console.log("succsess", data);
+    // console.log("submitting...:", data);
 
-    await signUp(data);
+    await signUp(data).catch((err) => {
+      // console.log("sign up form...", err.message);
+      setError("email", { message: err.message });
+    });
   };
 
+  console.log({ currentUser });
   return (
     <>
       <div className="flex min-h-full items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
@@ -59,6 +66,7 @@ export default function SignUp() {
                 label="email"
                 type="email"
                 name="email"
+                placeholder="Email"
                 inputProps={{
                   ...register("email"),
                   formNoValidate: true,
@@ -74,6 +82,7 @@ export default function SignUp() {
                 label="Password"
                 type="password"
                 name="password"
+                placeholder="Password"
                 inputProps={{ ...register("password") }}
               />
               <ErrorMessage
@@ -89,7 +98,6 @@ export default function SignUp() {
                 label="Remember me?"
                 inputProps={{ ...register("rememberMe") }}
               />
-
               <div className="text-sm">
                 <a
                   href={signIn}
