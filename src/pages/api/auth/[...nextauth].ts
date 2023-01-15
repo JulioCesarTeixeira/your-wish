@@ -4,6 +4,7 @@ import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import prisma from "../../../lib/prisma";
 import getServerUrl from "@src/helpers/getServerUrl";
 import axios from "axios";
+import { trpc } from "@src/utils/trpc";
 
 export const authOptions: NextAuthOptions = {
   // Configure one or more authentication providers
@@ -41,6 +42,9 @@ export const authOptions: NextAuthOptions = {
         //   headers: { "Content-Type": "application/json" },
         // });
 
+        //trpc server side call to check credentials
+        // const response = trpc.user.signIn.useMutation({});
+
         const res = await axios.post(`${baseUrl}/api/auth/check-credentials`, {
           ...credentials,
         });
@@ -70,18 +74,18 @@ export const authOptions: NextAuthOptions = {
     strategy: "jwt",
   },
   callbacks: {
-    signIn(params) {
-      console.log("signIn", params);
-      return true;
-    },
+    // signIn(params) {
+    //   console.log("signIn", params);
+    //   return true;
+    // },
     //add user id to token and return token
     jwt: async ({ token, user }) => {
       if (user) {
         token.id = user.id;
         token.email = user.email;
       }
-      console.log({ token });
-      console.log({ user });
+      // console.log({ token });
+      // console.log({ user });
       return token;
     },
     session: async ({ session, token }) => {

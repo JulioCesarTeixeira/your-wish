@@ -1,6 +1,8 @@
 import { httpBatchLink } from "@trpc/client";
 import { createTRPCNext } from "@trpc/next";
 import type { AppRouter } from "../server/routers/_app";
+import { inferRouterInputs, inferRouterOutputs } from "@trpc/server";
+import SuperJSON from "superjson";
 
 function getBaseUrl() {
   if (typeof window !== "undefined")
@@ -21,7 +23,10 @@ function getBaseUrl() {
 
 // export const trpc = createTRPCNext<AppRouter>({
 //   config({ ctx }) {
+//     //Pass ctx to createReactQueryHooks to get access to the queryClient
+
 //     return {
+//       transformer: SuperJSON,
 //       links: [
 //         httpBatchLink({
 //           /**
@@ -34,7 +39,7 @@ function getBaseUrl() {
 //       /**
 //        * @link https://tanstack.com/query/v4/docs/reference/QueryClient
 //        **/
-//       // queryClientConfig: { defaultOptions: { queries: { staleTime: 60 } } },
+//       queryClientConfig: { defaultOptions: { queries: { staleTime: 60 } } },
 //     };
 //   },
 //   /**
@@ -43,10 +48,22 @@ function getBaseUrl() {
 //   ssr: false,
 // });
 
+/**
+ * Inference helper for inputs
+ * @example type HelloInput = RouterInputs['example']['hello']
+ **/
+export type RouterInputs = inferRouterInputs<AppRouter>;
+/**
+ * Inference helper for outputs
+ * @example type HelloOutput = RouterOutputs['example']['hello']
+ **/
+export type RouterOutputs = inferRouterOutputs<AppRouter>;
+
 //? SSR implementation example
 export const trpc = createTRPCNext<AppRouter>({
   config({ ctx }) {
     return {
+      transformer: SuperJSON,
       links: [
         httpBatchLink({
           // The server needs to know your app's full url
