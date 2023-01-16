@@ -34,6 +34,8 @@ export async function createContext(ctx: CreateNextContextOptions) {
   const { req, res } = ctx;
   const session = await unstable_getServerSession(req, res, authOptions);
 
+  console.log("server session", session);
+
   const contextInner = await createContextInner({ session });
 
   return {
