@@ -3,5 +3,12 @@
 @tailwind utilities;
 
 html {
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
+}
+
+html,
+body,
+body > div:first-child,
+div#__next {
+  height: 100%;
 }

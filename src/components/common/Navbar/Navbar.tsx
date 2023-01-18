@@ -6,6 +6,8 @@ import {
   MagnifyingGlassIcon,
   ShoppingBagIcon,
   XMarkIcon,
+  UserIcon,
+  UserCircleIcon,
 } from "@heroicons/react/24/outline";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { navigation, paths } from "@src/constants/navigation";
@@ -16,7 +18,7 @@ function classNames(...classes: string[]) {
 }
 
 export default function Navbar() {
-  const { signUp, home } = paths;
+  const { signUp, home, profile } = paths;
   const { data: session } = useSession();
   const [open, setOpen] = useState(false);
 
@@ -172,18 +174,33 @@ export default function Navbar() {
                       Sign in
                     </button>
                   </div>
+
+                  <div className="flow-root">
+                    {session ? (
+                      <p className="text-sm font-medium text-gray-700 hover:text-gray-800">
+                        {session.user?.email}
+                      </p>
+                    ) : (
+                      <Link
+                        href={signUp}
+                        className="text-sm font-medium text-gray-700 hover:text-gray-800"
+                      >
+                        Create account
+                      </Link>
+                    )}
+                  </div>
                   <div className="flow-root">
                     <Link
-                      href={signUp}
+                      href={profile}
                       className="-m-2 block p-2 font-medium text-gray-900"
                     >
-                      Create account
+                      My profile
                     </Link>
                   </div>
                 </div>
 
                 <div className="border-t border-gray-200 py-6 px-4">
-                  <a href="#" className="-m-2 flex items-center p-2">
+                  <a href={home} className="-m-2 flex items-center p-2">
                     <img
                       src="https://tailwindui.com/img/flags/flag-canada.svg"
                       alt=""
@@ -223,7 +240,7 @@ export default function Navbar() {
 
               {/* Logo */}
               <div className="ml-4 flex lg:ml-0">
-                <a href="#">
+                <a href={home}>
                   <span className="sr-only">Your Company</span>
                   <img
                     className="h-8 w-auto"
@@ -389,8 +406,18 @@ export default function Navbar() {
                     </Link>
                   )}
                 </div>
-
-                <div className="hidden lg:ml-8 lg:flex">
+                {session && (
+                  // user profile icon
+                  <div className="flex lg:ml-8">
+                    <div className="flex-shrink-0">
+                      <Link href={profile}>
+                        <span className="sr-only">View profile</span>
+                        <UserCircleIcon className="h-8 w-8 text-gray-400 hover:text-gray-500" />
+                      </Link>
+                    </div>
+                  </div>
+                )}
+                {/* <div className="hidden lg:ml-8 lg:flex">
                   <a
                     href="#"
                     className="flex items-center text-gray-700 hover:text-gray-800"
@@ -403,7 +430,7 @@ export default function Navbar() {
                     <span className="ml-3 block text-sm font-medium">CAD</span>
                     <span className="sr-only">, change currency</span>
                   </a>
-                </div>
+                </div> */}
 
                 {/* Search */}
                 <div className="flex lg:ml-6">

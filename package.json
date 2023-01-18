@@ -36,6 +36,7 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-hook-form": "^7.39.3",
+    "react-phone-number-input": "^3.2.16",
     "superjson": "^1.12.1",
     "typescript": "4.8.4",
     "zod": "^3.20.2"
