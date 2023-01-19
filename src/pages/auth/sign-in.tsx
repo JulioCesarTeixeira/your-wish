@@ -1,14 +1,14 @@
 import Image from "next/image";
 import TextfieldInput from "../../components/form/TextfieldInput";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { joiResolver } from "@hookform/resolvers/joi";
-import Joi from "joi";
 import { ErrorMessage } from "@hookform/error-message";
 import CheckboxInput from "../../components/form/CheckboxInput";
 import Button from "../../components/buttons/Button";
 import { useAuth } from "../../contexts/AuthContext";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { loginSchema } from "@src/common/validation/auth";
 
 interface ILoginForm {
   email: string;
@@ -16,31 +16,10 @@ interface ILoginForm {
   rememberMe: boolean;
 }
 
-const schema = Joi.object({
-  email: Joi.string()
-    .email({
-      minDomainSegments: 1,
-      tlds: { allow: ["com", "net"] },
-    })
-    .messages({
-      "string.email": "Please enter a valid email address",
-      "string.empty": "Please enter your email address",
-    }),
-  password: Joi.string().min(6).required().messages({
-    "string.min": "Password must be at least 6 characters",
-    "string.empty": "Please enter your password",
-  }),
-  rememberMe: Joi.boolean().not().required(),
-});
-
 export default function Login() {
-  const { currentUser, handleSignIn } = useAuth();
   const { push } = useRouter();
   const { data, status } = useSession();
 
-  console.log({ currentUser });
-  console.log("data", data);
-  console.log("status", status);
   const {
     register,
     handleSubmit,
@@ -48,7 +27,7 @@ export default function Login() {
     clearErrors,
     formState: { errors },
   } = useForm<ILoginForm>({
-    resolver: joiResolver(schema),
+    resolver: zodResolver(loginSchema),
     defaultValues: {
       email: "",
       password: "",
@@ -68,7 +47,7 @@ export default function Login() {
       });
 
       if (!res?.ok) {
-        console.log("front end", res);
+        // console.log("front end", res);
         return setError("password", {
           type: "manual",
           message: "Invalid email or password",
@@ -105,7 +84,7 @@ export default function Login() {
             <input type="hidden" name="remember" defaultValue="true" />
             <div className="-space-y-px rounded-md shadow-sm">
               <TextfieldInput
-                label="email"
+                label="Email address"
                 type="email"
                 name="email"
                 inputProps={{

@@ -22,8 +22,8 @@ function TextfieldInput({
   inputProps,
 }: Props) {
   return (
-    <div>
-      <label htmlFor={name} className="sr-only">
+    <div className="flex flex-col mb-1">
+      <label htmlFor={name} className="block text-sm font-medium text-gray-700">
         {label}
       </label>
       <input
@@ -33,7 +33,7 @@ function TextfieldInput({
         autoComplete={autoComplete}
         required={required}
         disabled={isDisabled}
-        className="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+        className="mt-1 relative block w-full appearance-none rounded-none rounded-t-lg border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
         placeholder={placeholder}
         {...inputProps}
       />

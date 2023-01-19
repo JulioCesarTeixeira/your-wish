@@ -63,10 +63,10 @@ export default function SignUp() {
             <input type="hidden" name="remember" defaultValue="true" />
             <div className="-space-y-px rounded-md shadow-sm">
               <TextfieldInput
-                label="email"
+                label="Email address"
                 type="email"
                 name="email"
-                placeholder="Email"
+                // placeholder="Email"
                 inputProps={{
                   ...register("email"),
                   formNoValidate: true,
@@ -79,10 +79,10 @@ export default function SignUp() {
                 render={({ message }) => <p>{message}</p>}
               />
               <TextfieldInput
-                label="Password"
+                label="Choose a password"
                 type="password"
                 name="password"
-                placeholder="Password"
+                // placeholder="Password"
                 inputProps={{ ...register("password") }}
               />
               <ErrorMessage
