@@ -21,12 +21,13 @@ function Page() {
     return <p>Access Denied</p>;
   }
 
-  const onSubmit = async (data: IPersonalInfo) => {
+  const handleSubmit = async (data: IPersonalInfo) => {
     console.log("submitting...:", data);
+    //TODO submit data to backend
   };
   return (
     <div className="h-full overflow-hidden shadow sm:rounded-md bg-gray-100">
-      <MyProfileForm handleSubmit={onSubmit} />
+      <MyProfileForm onSubmit={handleSubmit} />
     </div>
   );
 }

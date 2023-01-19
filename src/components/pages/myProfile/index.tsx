@@ -1,15 +1,18 @@
+import { DevTool } from "@hookform/devtools";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { IPersonalInfo, personalInfoSchema } from "@src/common/validation/auth";
+import SelectInput from "@src/components/form/SelectInput";
+import TextfieldInput from "@src/components/form/TextfieldInput";
 import React, { useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import en from "react-phone-number-input/locale/en.json";
 
 type Props = {
-  handleSubmit: (data: IPersonalInfo) => Promise<void>;
+  onSubmit: (data: IPersonalInfo) => Promise<void>;
 };
 
-function ProfileForm({ handleSubmit }: Props) {
-  const form = useForm<IPersonalInfo>({
+function ProfileForm({ onSubmit }: Props) {
+  const { register, control, handleSubmit } = useForm<IPersonalInfo>({
     resolver: zodResolver(personalInfoSchema),
   });
 
@@ -24,8 +27,14 @@ function ProfileForm({ handleSubmit }: Props) {
     return options;
   }, [en]);
 
+  const onSubmitHandler = async (data: IPersonalInfo) => {
+    console.log("data", data);
+    await onSubmit(data);
+  };
+
   return (
     <div className="p-4 h-full flex items-center justify-center max-h-screen">
+      <DevTool control={control} />
       <div className="mt-10 sm:mt-0">
         <div className="md:grid md:grid-cols-3 md:gap-6">
           <div className="md:col-span-1">
@@ -39,141 +48,104 @@ function ProfileForm({ handleSubmit }: Props) {
             </div>
           </div>
           <div className="mt-5 md:col-span-2 md:mt-0">
-            <form action="#" method="POST">
+            <form noValidate onSubmit={handleSubmit(onSubmitHandler)}>
               <div className="overflow-hidden shadow sm:rounded-md">
                 <div className="bg-white px-4 py-5 sm:p-6">
                   <div className="grid grid-cols-6 gap-6">
                     <div className="col-span-6 sm:col-span-3">
-                      <label
-                        htmlFor="first-name"
-                        className="block text-sm font-medium text-gray-700"
-                      >
-                        First name
-                      </label>
-                      <input
+                      <TextfieldInput
                         type="text"
                         name="first-name"
-                        id="first-name"
+                        label={"First name"}
                         autoComplete="given-name"
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                        inputProps={{
+                          id: "first-name",
+                          ...register("firstName"),
+                        }}
                       />
                     </div>
 
                     <div className="col-span-6 sm:col-span-3">
-                      <label
-                        htmlFor="last-name"
-                        className="block text-sm font-medium text-gray-700"
-                      >
-                        Last name
-                      </label>
-                      <input
+                      <TextfieldInput
                         type="text"
                         name="last-name"
-                        id="last-name"
-                        autoComplete="family-name"
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                        label={"Last name"}
+                        autoComplete="given-name"
+                        inputProps={{
+                          ...register("lastName"),
+                        }}
                       />
                     </div>
 
                     <div className="col-span-6 sm:col-span-4">
-                      <label
-                        htmlFor="email-address"
-                        className="block text-sm font-medium text-gray-700"
-                      >
-                        Email address
-                      </label>
-                      <input
-                        type="text"
+                      <TextfieldInput
+                        type="email"
                         name="email-address"
-                        id="email-address"
+                        label={"Your preferred email address"}
                         autoComplete="email"
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                        inputProps={{
+                          ...register("email"),
+                        }}
                       />
                     </div>
 
                     <div className="col-span-6 sm:col-span-3">
-                      <label
-                        htmlFor="country"
-                        className="block text-sm font-medium text-gray-700"
-                      >
-                        Country
-                      </label>
-                      <select
-                        id="country"
+                      <SelectInput
                         name="country"
-                        autoComplete="country-name"
-                        defaultValue={"BR"}
-                        className="mt-1 block w-full rounded-md border border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                      >
-                        {countries.map(({ key, value }) => (
-                          <option key={key} value={key}>
-                            {value}
-                          </option>
-                        ))}
-                      </select>
+                        label="Country"
+                        options={countries}
+                        selectProps={{
+                          defaultValue: "BR",
+                          ...register("country"),
+                        }}
+                      />
                     </div>
 
                     <div className="col-span-6">
-                      <label
-                        htmlFor="street-address"
-                        className="block text-sm font-medium text-gray-700"
-                      >
-                        Street address
-                      </label>
-                      <input
+                      <TextfieldInput
                         type="text"
                         name="street-address"
-                        id="street-address"
+                        label={"Your street + number"}
                         autoComplete="street-address"
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                        inputProps={{
+                          ...register("address"),
+                        }}
                       />
                     </div>
 
                     <div className="col-span-6 sm:col-span-6 lg:col-span-2">
-                      <label
-                        htmlFor="city"
-                        className="block text-sm font-medium text-gray-700"
-                      >
-                        City
-                      </label>
-                      <input
+                      <TextfieldInput
                         type="text"
                         name="city"
-                        id="city"
+                        label={"City"}
                         autoComplete="address-level2"
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                        inputProps={{
+                          ...register("city"),
+                        }}
                       />
                     </div>
 
                     <div className="col-span-6 sm:col-span-3 lg:col-span-2">
-                      <label
-                        htmlFor="region"
-                        className="block text-sm font-medium text-gray-700"
-                      >
-                        State / Province
-                      </label>
-                      <input
+                      <TextfieldInput
                         type="text"
                         name="region"
-                        id="region"
+                        label={"State / Province"}
                         autoComplete="address-level1"
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                        inputProps={{
+                          ...register("state"),
+                        }}
                       />
                     </div>
 
                     <div className="col-span-6 sm:col-span-3 lg:col-span-2">
-                      <label
-                        htmlFor="postal-code"
-                        className="block text-sm font-medium text-gray-700"
-                      >
-                        ZIP / Postal code
-                      </label>
-                      <input
+                      <TextfieldInput
                         type="text"
-                        name="postal-code"
-                        id="postal-code"
+                        name="postal-cod"
+                        label={"ZIP / Postal code"}
                         autoComplete="postal-code"
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                        inputProps={{
+                          ...register("zip"),
+                        }}
                       />
                     </div>
                   </div>
