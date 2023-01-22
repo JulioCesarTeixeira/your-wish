@@ -31,7 +31,7 @@ function AddressForm({ onSubmit }: Props) {
       return { key, value };
     });
     return options;
-  }, [en]);
+  }, []);
 
   const onSubmitHandler: SubmitHandler<IAddress> = async (data) => {
     console.log("data", data);

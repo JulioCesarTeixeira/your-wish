@@ -61,14 +61,11 @@ model User {
 model Profile {
   id           String   @id @default(cuid())
   userId       String   @unique
-  addressId    String   @unique
   firstName    String?
   lastName     String?
   contactEmail String?  @unique
+  phone        String?
   picture      String?
-  bio          String?
-  website      String?
-  location     String?
   user         User?    @relation(fields: [userId], references: [id])
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
@@ -83,7 +80,7 @@ model Address {
   zip       String
   country   String
   isDefault Boolean      @default(false)
-  type      AddressType?
+  type      AddressType? @default(DELIVERY)
   user      User         @relation(fields: [userId], references: [id])
   userId    String
 

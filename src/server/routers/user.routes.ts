@@ -1,15 +1,12 @@
 import * as trpc from "@trpc/server";
 import { loginSchema, signUpSchema } from "@src/common/validation/auth";
-import { hashPassword } from "@src/lib/encryption/hashPassword";
 import { router, publicProcedure, protectedProcedure } from "../trpc";
-import { AuthUser } from "@src/types/user";
 import {
   checkUserCredentialsController,
-  createUserAddressController,
   createUserController,
-  updateUserAddressController,
+  updatePersonalInfoController,
 } from "../controllers/user.controller";
-import { addressSchema } from "@src/common/validation/user";
+import { personalInfoSchema } from "@src/common/validation/user";
 
 export const userRouter = router({
   // POST /api/user/signup
@@ -22,14 +19,9 @@ export const userRouter = router({
     .mutation(async ({ input, ctx }) =>
       checkUserCredentialsController({ input, ctx })
     ),
-  createAddress: protectedProcedure
-    .input(addressSchema)
+  updateProfile: protectedProcedure
+    .input(personalInfoSchema)
     .mutation(async ({ input, ctx }) =>
-      createUserAddressController({ input, ctx })
-    ),
-  updateAddress: protectedProcedure
-    .input(addressSchema)
-    .mutation(async ({ input, ctx }) =>
-      updateUserAddressController({ input, ctx })
+      updatePersonalInfoController({ input, ctx })
     ),
 });

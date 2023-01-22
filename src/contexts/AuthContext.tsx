@@ -100,6 +100,8 @@ export function AuthContextProvider({
               id: user.id,
               name: user.name,
               isEmailVerified: null,
+              role: user.role,
+              createdAt: user.createdAt,
             });
 
             push(home);

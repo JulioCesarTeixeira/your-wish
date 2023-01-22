@@ -23,7 +23,7 @@ function ProfileForm({ onSubmit }: Props) {
   } = useForm<IPersonalInfo>({
     resolver: zodResolver(personalInfoSchema),
     defaultValues: {
-      email: data?.user?.email,
+      contactEmail: data?.user?.email,
     },
   });
 
@@ -92,12 +92,12 @@ function ProfileForm({ onSubmit }: Props) {
                     label={"Your preferred email address"}
                     autoComplete="email"
                     inputProps={{
-                      ...register("email"),
+                      ...register("contactEmail"),
                     }}
                   />
                   <ErrorMessage
                     errors={errors}
-                    name="email"
+                    name="contactEmail"
                     render={({ message }) => <p>{message}</p>}
                   />
                 </div>

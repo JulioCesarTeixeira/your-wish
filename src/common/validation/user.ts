@@ -26,7 +26,7 @@ export const personalInfoSchema = z.object({
   lastName: z
     .string()
     .min(2, { message: "Last name must be at least 2 characters" }),
-  email: z.string().email(),
+  contactEmail: z.string().email(),
   phone: z
     .string()
     .min(10, { message: "Phone number must be at least 10 characters" })
