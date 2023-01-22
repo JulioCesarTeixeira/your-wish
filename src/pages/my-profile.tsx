@@ -1,14 +1,6 @@
 import { useSession } from "next-auth/react";
-import MyProfileForm from "@components/pages/myProfile";
 import React from "react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  IPersonalInfo,
-  ISignUp,
-  signUpSchema,
-} from "@src/common/validation/auth";
-import { useForm } from "react-hook-form";
-import signUp from "./auth/sign-up";
+import MyProfileForms from "@src/components/pages/myProfile";
 
 function Page() {
   const { data: session, status } = useSession();
@@ -21,15 +13,7 @@ function Page() {
     return <p>Access Denied</p>;
   }
 
-  const handleSubmit = async (data: IPersonalInfo) => {
-    console.log("submitting...:", data);
-    //TODO submit data to backend
-  };
-  return (
-    <div className="h-full overflow-hidden shadow sm:rounded-md bg-gray-100">
-      <MyProfileForm onSubmit={handleSubmit} />
-    </div>
-  );
+  return <MyProfileForms />;
 }
 
 export default Page;

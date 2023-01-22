@@ -87,11 +87,7 @@ const Home = () => {
   );
 };
 
-// Home.getLayout = function getLayout(page: ReactElement) {
-//   return (
-//     <Layout>
-//       {page}
-//     </Layout>
-//   )
-// }
+Home.getLayout = function getLayout(page: ReactElement) {
+  return <Layout>{page}</Layout>;
+};
 export default Home;
