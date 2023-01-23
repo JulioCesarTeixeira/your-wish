@@ -4,6 +4,8 @@ import * as trpc from "@trpc/server";
 import { Context } from "../context";
 import {
   createUserAddress,
+  getAddressById,
+  getAddressesByUserId,
   upsertUserAddress,
 } from "../services/address.service";
 
@@ -82,6 +84,56 @@ export const removeUserAddressController = async ({
   return {
     status: 200,
     message: "Profile updated successfully",
+    address,
+  };
+};
+
+export const getUserAddressesController = async ({ ctx }: { ctx: Context }) => {
+  const { session } = ctx;
+  if (!session?.id) {
+    throw new trpc.TRPCError({
+      code: "UNAUTHORIZED",
+      message: "You are not authorized to perform this action.",
+    });
+  }
+
+  const id = session.id as string;
+
+  const addresses = await getAddressesByUserId(id);
+
+  return {
+    status: 200,
+    message: "Addresses fetched successfully",
+    addresses,
+  };
+};
+
+export const getAddressByIdController = async ({
+  input,
+  ctx,
+}: {
+  input: Pick<IAddress, "addressId">;
+  ctx: Context;
+}) => {
+  const { session } = ctx;
+  if (!session?.id) {
+    throw new trpc.TRPCError({
+      code: "UNAUTHORIZED",
+      message: "You are not authorized to perform this action.",
+    });
+  }
+  if (!input.addressId) {
+    throw new trpc.TRPCError({
+      code: "BAD_REQUEST",
+      message: "Address id is required",
+    });
+  }
+
+  const address = await getAddressById(input.addressId);
+
+  return {
+    status: 200,
+    message: "Address fetched successfully",
     address,
   };
 };

@@ -2,8 +2,12 @@ import { router, protectedProcedure } from "../trpc";
 import {
   createUserAddressController,
   updateUserAddressController,
+  getAddressByIdController,
+  getUserAddressesController,
 } from "../controllers/address.controller";
 import { addressSchema } from "@src/common/validation/user";
+import { getAddressById } from "../services/address.service";
+import { z } from "zod";
 
 export const addressRouter = router({
   createAddress: protectedProcedure
@@ -16,4 +20,10 @@ export const addressRouter = router({
     .mutation(async ({ input, ctx }) =>
       updateUserAddressController({ input, ctx })
     ),
+  getAddress: protectedProcedure
+    .input(z.object({ addressId: z.string() }))
+    .query(async ({ ctx, input }) => getAddressByIdController({ input, ctx })),
+  getAddresses: protectedProcedure.query(async ({ ctx }) =>
+    getUserAddressesController({ ctx })
+  ),
 });

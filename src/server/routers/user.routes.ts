@@ -5,8 +5,10 @@ import {
   checkUserCredentialsController,
   createUserController,
   updatePersonalInfoController,
+  getUserProfileController,
 } from "../controllers/user.controller";
 import { personalInfoSchema } from "@src/common/validation/user";
+import { getUserProfileByUserId } from "../services/user.service";
 
 export const userRouter = router({
   // POST /api/user/signup
@@ -24,4 +26,7 @@ export const userRouter = router({
     .mutation(async ({ input, ctx }) =>
       updatePersonalInfoController({ input, ctx })
     ),
+  getProfile: protectedProcedure.query(async ({ ctx }) =>
+    getUserProfileController({ ctx })
+  ),
 });

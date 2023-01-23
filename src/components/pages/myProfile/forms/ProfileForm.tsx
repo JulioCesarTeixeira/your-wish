@@ -2,12 +2,14 @@ import { DevTool } from "@hookform/devtools";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { IPersonalInfo, personalInfoSchema } from "@src/common/validation/user";
 import TextfieldInput from "@src/components/form/TextfieldInput";
-import React from "react";
+import React, { useEffect } from "react";
 import PhoneInputWithCountry from "react-phone-number-input/react-hook-form";
 import { useForm } from "react-hook-form";
 import "react-phone-number-input/style.css";
 import { ErrorMessage } from "@hookform/error-message";
 import { useSession } from "next-auth/react";
+import { useQuery } from "@tanstack/react-query";
+import { trpc } from "@src/utils/trpc";
 
 type Props = {
   onSubmit: (data: IPersonalInfo) => Promise<void>;
@@ -19,6 +21,7 @@ function ProfileForm({ onSubmit }: Props) {
     register,
     control,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm<IPersonalInfo>({
     resolver: zodResolver(personalInfoSchema),
@@ -26,6 +29,18 @@ function ProfileForm({ onSubmit }: Props) {
       contactEmail: data?.user?.email,
     },
   });
+
+  const { data: profileData } = trpc.user.getProfile.useQuery();
+  const { userProfile } = profileData || {};
+
+  useEffect(() => {
+    if (userProfile) {
+      setValue("firstName", userProfile?.firstName ?? "");
+      setValue("lastName", userProfile.lastName ?? "");
+      setValue("contactEmail", userProfile.contactEmail ?? "");
+      setValue("phone", userProfile.phone ?? "");
+    }
+  }, [userProfile]);
 
   const onSubmitHandler = async (data: IPersonalInfo) => {
     console.log("data", data);

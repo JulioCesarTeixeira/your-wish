@@ -128,3 +128,12 @@ export const upsertUserPersonalInfo = async (
 
   return prismaPersonalInfo;
 };
+
+//get user profile by userId
+export const getUserProfileByUserId = async (userId: string) => {
+  const prismaPersonalInfo = await prisma.profile.findUnique({
+    where: { userId },
+  });
+
+  return prismaPersonalInfo;
+};

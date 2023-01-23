@@ -47,3 +47,19 @@ export const upsertUserAddress = async (input: IAddress, userId: string) => {
 
   return prismaAddress;
 };
+
+export const getAddressesByUserId = async (userId: string) => {
+  const prismaAddresses = await prisma.address.findMany({
+    where: { userId },
+  });
+
+  return prismaAddresses;
+};
+
+export const getAddressById = async (addressId: string) => {
+  const prismaAddress = await prisma.address.findUnique({
+    where: { id: addressId },
+  });
+
+  return prismaAddress;
+};

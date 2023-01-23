@@ -5,6 +5,7 @@ import { IPersonalInfo } from "@src/common/validation/user";
 import {
   checkUserCredentials,
   createUser,
+  getUserProfileByUserId,
   upsertUserPersonalInfo,
 } from "../services/user.service";
 
@@ -65,6 +66,25 @@ export const updatePersonalInfoController = async ({
   return {
     status: 200,
     message: "Profile updated successfully",
+    userProfile,
+  };
+};
+
+export const getUserProfileController = async ({ ctx }: { ctx: Context }) => {
+  const { session } = ctx;
+  if (!session?.id) {
+    throw new trpc.TRPCError({
+      code: "UNAUTHORIZED",
+      message: "You are not authorized to perform this action.",
+    });
+  }
+  const id = session.id as string;
+
+  const userProfile = await getUserProfileByUserId(id);
+
+  return {
+    status: 200,
+    message: "Profile fetched successfully",
     userProfile,
   };
 };
