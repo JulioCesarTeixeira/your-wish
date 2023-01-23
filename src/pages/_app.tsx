@@ -7,6 +7,7 @@ import { Session } from "next-auth";
 import { withTRPC } from "@trpc/next";
 import { AppRouter } from "../server/routers/_app";
 import { trpc } from "../utils/trpc";
+import Head from "next/head";
 
 function App({
   Component,
@@ -16,6 +17,9 @@ function App({
     <SessionProvider session={session}>
       <AuthContextProvider>
         <Layout>
+          <Head>
+            <title>Your wish</title>
+          </Head>
           <Component {...pageProps} />
         </Layout>
       </AuthContextProvider>
