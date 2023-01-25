@@ -10,6 +10,7 @@ import { ErrorMessage } from "@hookform/error-message";
 import { useSession } from "next-auth/react";
 import { useQuery } from "@tanstack/react-query";
 import { trpc } from "@src/utils/trpc";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 type Props = {
   onSubmit: (data: IPersonalInfo) => Promise<void>;
@@ -17,6 +18,21 @@ type Props = {
 
 function ProfileForm({ onSubmit }: Props) {
   const { data } = useSession();
+  const {
+    data: profileData,
+    isLoading,
+    isError,
+    isSuccess,
+    refetch,
+  } = trpc.user.getProfile.useQuery(undefined, {
+    refetchOnWindowFocus: false,
+    staleTime: Infinity,
+    cacheTime: Infinity,
+    onSuccess: (data) => {
+      console.log("data", data);
+    },
+  });
+  const { userProfile } = profileData || {};
   const {
     register,
     control,
@@ -30,22 +46,28 @@ function ProfileForm({ onSubmit }: Props) {
     },
   });
 
-  const { data: profileData } = trpc.user.getProfile.useQuery();
-  const { userProfile } = profileData || {};
+  console.log("userProfile", userProfile);
+  console.log("isLoading", isLoading);
 
   useEffect(() => {
-    if (userProfile) {
+    if (userProfile && isSuccess) {
       setValue("firstName", userProfile?.firstName ?? "");
       setValue("lastName", userProfile.lastName ?? "");
       setValue("contactEmail", userProfile.contactEmail ?? "");
       setValue("phone", userProfile.phone ?? "");
     }
-  }, [userProfile]);
+  }, [isSuccess, userProfile]);
 
   const onSubmitHandler = async (data: IPersonalInfo) => {
     console.log("data", data);
     await onSubmit(data);
+
+    await refetch();
   };
+
+  if (isLoading) return <div>Loading...</div>;
+
+  if (isError) return <div>Error</div>;
 
   return (
     <div className="md:grid md:grid-cols-3 md:gap-6">
@@ -59,9 +81,10 @@ function ProfileForm({ onSubmit }: Props) {
           </p>
         </div>
       </div>
+      <ReactQueryDevtools />
       <div className="mt-5 md:col-span-2 md:mt-0">
         <form noValidate onSubmit={handleSubmit(onSubmitHandler)}>
-          <DevTool control={control} placement="bottom-left" />
+          {/* <DevTool control={control} placement="bottom-left" /> */}
           <div className="overflow-hidden shadow sm:rounded-md">
             <div className="bg-white px-4 py-5 sm:p-6">
               <div className="grid grid-cols-6 gap-6">

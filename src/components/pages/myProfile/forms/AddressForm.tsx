@@ -4,6 +4,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { IAddress, addressSchema } from "@src/common/validation/user";
 import SelectInput from "@src/components/form/SelectInput";
 import TextfieldInput from "@src/components/form/TextfieldInput";
+import { trpc } from "@src/utils/trpc";
+import { useSession } from "next-auth/react";
 import React, { useMemo } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import en from "react-phone-number-input/locale/en.json";
@@ -13,6 +15,21 @@ type Props = {
 };
 
 function AddressForm({ onSubmit }: Props) {
+  const { data } = useSession();
+  const {
+    data: profileData,
+    isLoading,
+    isError,
+    isSuccess,
+    refetch,
+  } = trpc.user.getProfile.useQuery(undefined, {
+    refetchOnWindowFocus: false,
+    staleTime: Infinity,
+    cacheTime: Infinity,
+    onSuccess: (data) => {
+      console.log("data", data);
+    },
+  });
   const {
     register,
     control,
