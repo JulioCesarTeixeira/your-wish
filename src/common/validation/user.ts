@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const addressSchema = z.object({
-  addressId: z.string().optional(),
+  id: z.string().optional(),
   country: z
     .string()
     .min(2, { message: "Country must be at least 2 characters" }),

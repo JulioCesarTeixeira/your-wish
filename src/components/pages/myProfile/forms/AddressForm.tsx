@@ -20,6 +20,7 @@ function AddressForm({ onSubmit }: Props) {
     register,
     control,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm<IAddress>({
     resolver: zodResolver(addressSchema),
@@ -33,9 +34,13 @@ function AddressForm({ onSubmit }: Props) {
   } = trpc.address.getAddresses.useQuery(undefined, {
     refetchOnWindowFocus: false,
     staleTime: Infinity,
-    cacheTime: Infinity,
-    onSuccess: (data) => {
-      console.log("data", data);
+    onSuccess: ({ addresses }) => {
+      setValue("country", addresses[0]?.country ?? "");
+      setValue("city", addresses[0]?.city ?? "");
+      setValue("street", addresses[0]?.street ?? "");
+      setValue("zip", addresses[0]?.zip ?? "");
+      setValue("id", addresses[0]?.id ?? "");
+      setValue("state", addresses[0]?.state ?? "");
     },
   });
 
@@ -53,11 +58,13 @@ function AddressForm({ onSubmit }: Props) {
   const onSubmitHandler: SubmitHandler<IAddress> = async (data) => {
     console.log("data", data);
     await onSubmit(data);
+
+    await refetch();
   };
 
   useEffect(() => {
     if (addressesData && isSuccess) {
-      console.log("addressesData", addressesData);
+      console.log("addressesData", addressesData.addresses[0].id);
     }
   }, [isSuccess, addressesData]);
 

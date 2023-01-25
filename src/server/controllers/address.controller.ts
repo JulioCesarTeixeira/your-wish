@@ -78,7 +78,7 @@ export const removeUserAddressController = async ({
   }
 
   const address = await ctx.prisma.address.delete({
-    where: { id: input.addressId },
+    where: { id: input.id },
   });
 
   return {
@@ -112,7 +112,7 @@ export const getAddressByIdController = async ({
   input,
   ctx,
 }: {
-  input: Pick<IAddress, "addressId">;
+  input: Pick<IAddress, "id">;
   ctx: Context;
 }) => {
   const { session } = ctx;
@@ -122,14 +122,14 @@ export const getAddressByIdController = async ({
       message: "You are not authorized to perform this action.",
     });
   }
-  if (!input.addressId) {
+  if (!input.id) {
     throw new trpc.TRPCError({
       code: "BAD_REQUEST",
       message: "Address id is required",
     });
   }
 
-  const address = await getAddressById(input.addressId);
+  const address = await getAddressById(input.id);
 
   return {
     status: 200,

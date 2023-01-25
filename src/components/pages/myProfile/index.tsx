@@ -43,7 +43,6 @@ function index() {
           <div>Loading...</div>
         )}
       </div>
-      {JSON.stringify(addressData)}
       {/* </div> */}
     </div>
   );

@@ -3,7 +3,7 @@ import * as trpc from "@trpc/server";
 import { IAddress } from "@src/common/validation/user";
 
 export const createUserAddress = async (input: IAddress, userId: string) => {
-  const { street, city, state, zip, country, addressId } = input;
+  const { street, city, state, zip, country, id: addressId } = input;
 
   const prismaAddress = await prisma.address.create({
     data: {
@@ -22,7 +22,7 @@ export const createUserAddress = async (input: IAddress, userId: string) => {
 };
 
 export const upsertUserAddress = async (input: IAddress, userId: string) => {
-  const { street, city, state, zip, country, addressId } = input;
+  const { street, city, state, zip, country, id: addressId } = input;
 
   const prismaAddress = await prisma.address.upsert({
     where: { id: addressId || "" },
