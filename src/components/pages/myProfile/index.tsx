@@ -3,15 +3,21 @@ import React from "react";
 import { IAddress, IPersonalInfo } from "@src/common/validation/user";
 import AddressForm from "@src/components/pages/myProfile/forms/AddressForm";
 import { trpc } from "@src/utils/trpc";
+import Toast from "@src/components/common/Toast";
 
 function index() {
   const {
     mutateAsync: updateAddress,
     status: addressStatus,
     data: addressData,
-  } = trpc.address.updateAddress.useMutation();
+  } = trpc.address.updateAddress.useMutation({
+    onSuccess(data, variables, context) {
+      console.log("success", data, variables, context);
+    },
+  });
   const { mutateAsync: updateProfile, status: profileStatus } =
     trpc.user.updateProfile.useMutation();
+
   const handleProfileSubmit = async (data: IPersonalInfo) => {
     console.log("submitting...:", data);
     //TODO submit data to backend
@@ -42,6 +48,7 @@ function index() {
         ) : (
           <div>Loading...</div>
         )}
+        {/* <Toast title="Success!" /> */}
       </div>
       {/* </div> */}
     </div>
