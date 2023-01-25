@@ -6,7 +6,7 @@ import SelectInput from "@src/components/form/SelectInput";
 import TextfieldInput from "@src/components/form/TextfieldInput";
 import { trpc } from "@src/utils/trpc";
 import { useSession } from "next-auth/react";
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import en from "react-phone-number-input/locale/en.json";
 
@@ -17,26 +17,26 @@ type Props = {
 function AddressForm({ onSubmit }: Props) {
   const { data } = useSession();
   const {
-    data: profileData,
-    isLoading,
-    isError,
-    isSuccess,
-    refetch,
-  } = trpc.user.getProfile.useQuery(undefined, {
-    refetchOnWindowFocus: false,
-    staleTime: Infinity,
-    cacheTime: Infinity,
-    onSuccess: (data) => {
-      console.log("data", data);
-    },
-  });
-  const {
     register,
     control,
     handleSubmit,
     formState: { errors },
   } = useForm<IAddress>({
     resolver: zodResolver(addressSchema),
+  });
+  const {
+    data: addressesData,
+    isLoading,
+    isError,
+    isSuccess,
+    refetch,
+  } = trpc.address.getAddresses.useQuery(undefined, {
+    refetchOnWindowFocus: false,
+    staleTime: Infinity,
+    cacheTime: Infinity,
+    onSuccess: (data) => {
+      console.log("data", data);
+    },
   });
 
   const countries = useMemo(() => {
@@ -54,6 +54,16 @@ function AddressForm({ onSubmit }: Props) {
     console.log("data", data);
     await onSubmit(data);
   };
+
+  useEffect(() => {
+    if (addressesData && isSuccess) {
+      console.log("addressesData", addressesData);
+    }
+  }, [isSuccess, addressesData]);
+
+  if (isLoading) return <div>Loading...</div>;
+
+  if (isError) return <div>Error</div>;
 
   return (
     <div className="md:grid md:grid-cols-3 md:gap-6 mb-2">

@@ -1,4 +1,3 @@
-import { DevTool } from "@hookform/devtools";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { IPersonalInfo, personalInfoSchema } from "@src/common/validation/user";
 import TextfieldInput from "@src/components/form/TextfieldInput";
@@ -8,7 +7,6 @@ import { useForm } from "react-hook-form";
 import "react-phone-number-input/style.css";
 import { ErrorMessage } from "@hookform/error-message";
 import { useSession } from "next-auth/react";
-import { useQuery } from "@tanstack/react-query";
 import { trpc } from "@src/utils/trpc";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
@@ -18,21 +16,6 @@ type Props = {
 
 function ProfileForm({ onSubmit }: Props) {
   const { data } = useSession();
-  const {
-    data: profileData,
-    isLoading,
-    isError,
-    isSuccess,
-    refetch,
-  } = trpc.user.getProfile.useQuery(undefined, {
-    refetchOnWindowFocus: false,
-    staleTime: Infinity,
-    cacheTime: Infinity,
-    onSuccess: (data) => {
-      console.log("data", data);
-    },
-  });
-  const { userProfile } = profileData || {};
   const {
     register,
     control,
@@ -45,21 +28,22 @@ function ProfileForm({ onSubmit }: Props) {
       contactEmail: data?.user?.email,
     },
   });
-
-  console.log("userProfile", userProfile);
-  console.log("isLoading", isLoading);
-
-  useEffect(() => {
-    if (userProfile && isSuccess) {
-      setValue("firstName", userProfile?.firstName ?? "");
-      setValue("lastName", userProfile.lastName ?? "");
-      setValue("contactEmail", userProfile.contactEmail ?? "");
-      setValue("phone", userProfile.phone ?? "");
+  const { isLoading, isError, refetch } = trpc.user.getProfile.useQuery(
+    undefined,
+    {
+      refetchOnWindowFocus: false,
+      staleTime: Infinity,
+      onSuccess: ({ userProfile }) => {
+        setValue("firstName", userProfile?.firstName ?? "");
+        setValue("lastName", userProfile?.lastName ?? "");
+        setValue("contactEmail", userProfile?.contactEmail ?? "");
+        setValue("phone", userProfile?.phone ?? "");
+      },
     }
-  }, [isSuccess, userProfile]);
+  );
 
   const onSubmitHandler = async (data: IPersonalInfo) => {
-    console.log("data", data);
+    // console.log("data", data);
     await onSubmit(data);
 
     await refetch();
@@ -81,7 +65,7 @@ function ProfileForm({ onSubmit }: Props) {
           </p>
         </div>
       </div>
-      <ReactQueryDevtools />
+      {/* <ReactQueryDevtools /> */}
       <div className="mt-5 md:col-span-2 md:mt-0">
         <form noValidate onSubmit={handleSubmit(onSubmitHandler)}>
           {/* <DevTool control={control} placement="bottom-left" /> */}
