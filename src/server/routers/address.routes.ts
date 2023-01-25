@@ -21,7 +21,7 @@ export const addressRouter = router({
       updateUserAddressController({ input, ctx })
     ),
   getAddress: protectedProcedure
-    .input(z.object({ addressId: z.string() }))
+    .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => getAddressByIdController({ input, ctx })),
   getAddresses: protectedProcedure.query(async ({ ctx }) =>
     getUserAddressesController({ ctx })
