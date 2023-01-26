@@ -25,7 +25,6 @@ export default function SignUp() {
     defaultValues: {
       email: "",
       password: "",
-      rememberMe: false,
     },
   });
 
@@ -93,11 +92,6 @@ export default function SignUp() {
             </div>
 
             <div className="flex items-center justify-between">
-              <CheckboxInput
-                name="rememberMe"
-                label="Remember me?"
-                inputProps={{ ...register("rememberMe") }}
-              />
               <div className="text-sm">
                 <a
                   href={signIn}
