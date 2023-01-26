@@ -2,6 +2,7 @@ import { DevTool } from "@hookform/devtools";
 import { ErrorMessage } from "@hookform/error-message";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { IAddress, addressSchema } from "@src/common/validation/user";
+import { LoadingComponent } from "@src/components/common/LoadingComponent";
 import SelectInput from "@src/components/form/SelectInput";
 import TextfieldInput from "@src/components/form/TextfieldInput";
 import { trpc } from "@src/utils/trpc";
@@ -68,7 +69,7 @@ function AddressForm({ onSubmit }: Props) {
     }
   }, [isSuccess, addressesData]);
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <LoadingComponent />;
 
   if (isError) return <div>Error</div>;
 

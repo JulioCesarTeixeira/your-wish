@@ -9,6 +9,7 @@ import { ErrorMessage } from "@hookform/error-message";
 import { useSession } from "next-auth/react";
 import { trpc } from "@src/utils/trpc";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { LoadingComponent } from "@src/components/common/LoadingComponent";
 
 type Props = {
   onSubmit: (data: IPersonalInfo) => Promise<void>;
@@ -49,7 +50,7 @@ function ProfileForm({ onSubmit }: Props) {
     await refetch();
   };
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <LoadingComponent />;
 
   if (isError) return <div>Error</div>;
 

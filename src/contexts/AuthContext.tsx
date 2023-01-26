@@ -8,7 +8,7 @@ import { trpc } from "@src/utils/trpc";
 import { TRPCClientError } from "@trpc/client";
 import axios from "axios";
 import { Session } from "next-auth";
-import { signIn, useSession } from "next-auth/react";
+import { signIn, signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 
 import React, { useState, useEffect, useContext } from "react";
@@ -38,59 +38,39 @@ export function AuthContextProvider({
 }) {
   const { data, status } = useSession();
   const { push } = useRouter();
-  const { home, signIn } = paths;
+  const { home, signIn: signInPage } = paths;
   const [currentUser, setCurrentUser] = useState<AuthUser | null>(null);
   const [loading, setLoading] = useState(false);
   const { mutateAsync: signUpMutation } = trpc.user.signup.useMutation();
   const { mutateAsync: signInMutation } = trpc.user.signIn.useMutation();
 
-  async function signUp({ email, password, rememberMe }: ISignUp) {
-    console.log("signUp", email, password);
+  async function signUp({ email, password }: ISignUp) {
+    // console.log("signUp", email, password);
 
     try {
-      setLoading(true);
-
-      const { user } = await signUpMutation(
+      await signUpMutation(
         { email, password },
         {
           onSuccess: () => {
-            push(signIn);
+            push(signInPage);
           },
         }
       );
-      console.log("auth context:  ", user);
-
-      // await handleSignIn({ email, password, rememberMe });
-
-      // setCurrentUser({
-      //   email: user.email,
-      //   id: user.id,
-      //   name: user.name,
-      //   isEmailVerified: null,
-      // });
+      // console.log("auth context:  ", user);
 
       return Promise.resolve();
     } catch (err: any) {
-      console.log(
-        "auth context err",
-        err instanceof TRPCClientError ? "TRPC ERROR" : err
-      );
+      // console.log(
+      //   "auth context err",
+      //   err instanceof TRPCClientError ? "TRPC ERROR" : err
+      // );
       setCurrentUser(null);
       return Promise.reject(err);
-    } finally {
-      setLoading(false);
     }
   }
   async function handleSignIn({ email, password, rememberMe }: ILogin) {
-    setLoading(true);
-    console.log("signUp", email, password);
+    // console.log("signUp", email, password);
     try {
-      // await signIn("credentials", {
-      //   email,
-      //   password,
-      //   // redirect: true,
-      //   // callbackUrl: "/",
-      // });
       await signInMutation(
         { email, password, rememberMe },
         {
@@ -113,13 +93,11 @@ export function AuthContextProvider({
     } catch (err) {
       console.log("err", err);
       setCurrentUser(null);
-    } finally {
-      setLoading(false);
     }
   }
   async function logout() {
     setCurrentUser(null);
-    return Promise.resolve();
+    await signOut({ redirect: true, callbackUrl: signInPage });
   }
 
   return (

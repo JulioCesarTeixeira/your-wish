@@ -12,6 +12,7 @@ import {
 import { signIn, signOut, useSession } from "next-auth/react";
 import { navigation, paths } from "@src/constants/navigation";
 import Link from "next/link";
+import { useAuth } from "@src/contexts/AuthContext";
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
@@ -19,12 +20,9 @@ function classNames(...classes: string[]) {
 
 export default function Navbar() {
   const { signUp, home, profile } = paths;
+  const { logout } = useAuth();
   const { data: session } = useSession();
   const [open, setOpen] = useState(false);
-
-  function handleLinkClick() {
-    setOpen(false);
-  }
 
   return (
     <div className="bg-white z-50 relative">
@@ -378,7 +376,7 @@ export default function Navbar() {
                 <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
                   {session ? (
                     <button
-                      onClick={() => signOut()}
+                      onClick={logout}
                       className="text-sm font-medium text-gray-700 hover:text-gray-800"
                     >
                       Log out

@@ -5,6 +5,12 @@ import * as z from "zod";
 // and also to type the data returned from the API
 export const loginSchema = z.object({
   email: z.string({ required_error: "Field is required" }).email(),
+  password: z.string({ required_error: "Field is required" }),
+  rememberMe: z.boolean().default(false),
+});
+
+export const signUpSchema = z.object({
+  email: z.string({ required_error: "Field is required" }).email(),
   password: z
     .string()
     .min(4, {
@@ -17,10 +23,7 @@ export const loginSchema = z.object({
       message:
         "Your password must include at least one letter, one number and one special symbol",
     }),
-  rememberMe: z.boolean().default(false),
 });
-
-export const signUpSchema = loginSchema;
 
 export type ILogin = z.infer<typeof loginSchema>;
 export type ISignUp = z.infer<typeof signUpSchema>;

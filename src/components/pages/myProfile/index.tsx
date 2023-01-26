@@ -19,15 +19,13 @@ function index() {
     trpc.user.updateProfile.useMutation();
 
   const handleProfileSubmit = async (data: IPersonalInfo) => {
-    console.log("submitting...:", data);
-    //TODO submit data to backend
+    // console.log("submitting...:", data);
 
     await updateProfile(data);
   };
 
   const handleAddressSubmit = async (data: IAddress) => {
-    console.log("submitting...:", data);
-    //TODO submit data to backend
+    // console.log("submitting...:", data);
 
     await updateAddress(data);
   };
