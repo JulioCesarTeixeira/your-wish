@@ -4,7 +4,6 @@ const products = [
   {
     id: 1,
     name: "Earthen Bottle",
-    href: "#",
     price: "$48",
     imageSrc:
       "https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-01.jpg",
@@ -14,7 +13,6 @@ const products = [
   {
     id: 2,
     name: "Nomad Tumbler",
-    href: "#",
     price: "$35",
     imageSrc:
       "https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-02.jpg",
@@ -24,7 +22,6 @@ const products = [
   {
     id: 3,
     name: "Focus Paper Refill",
-    href: "#",
     price: "$89",
     imageSrc:
       "https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-03.jpg",
@@ -34,7 +31,6 @@ const products = [
   {
     id: 4,
     name: "Machined Mechanical Pencil",
-    href: "#",
     price: "$35",
     imageSrc:
       "https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-04.jpg",
@@ -47,7 +43,6 @@ const products = [
 const productList = [
   {
     id: 1,
-    href: "#",
     title: "Fjallraven - Foldsack No. 1 Backpack, Fits 15 Laptops",
     price: 109.95,
     description:
@@ -61,7 +56,6 @@ const productList = [
   },
   {
     id: 2,
-    href: "#",
     title: "Mens Casual Premium Slim Fit T-Shirts ",
     price: 22.3,
     description:
@@ -76,7 +70,6 @@ const productList = [
   },
   {
     id: 3,
-    href: "#",
     title: "Mens Cotton Jacket",
     price: 55.99,
     description:
@@ -90,7 +83,6 @@ const productList = [
   },
   {
     id: 4,
-    href: "#",
     title: "Mens Casual Slim Fit",
     price: 15.99,
     description:
@@ -104,7 +96,6 @@ const productList = [
   },
   {
     id: 5,
-    href: "#",
     title:
       "John Hardy Women's Legends Naga Gold & Silver Dragon Station Chain Bracelet",
     price: 695,
@@ -119,7 +110,6 @@ const productList = [
   },
   {
     id: 6,
-    href: "#",
     title: "Solid Gold Petite Micropave ",
     price: 168,
     description:
@@ -133,7 +123,6 @@ const productList = [
   },
   {
     id: 7,
-    href: "#",
     title: "White Gold Plated Princess",
     price: 9.99,
     description:
@@ -147,7 +136,6 @@ const productList = [
   },
   {
     id: 8,
-    href: "#",
     title: "Pierced Owl Rose Gold Plated Stainless Steel Double",
     price: 10.99,
     description:
@@ -161,7 +149,6 @@ const productList = [
   },
   {
     id: 9,
-    href: "#",
     title: "WD 2TB Elements Portable External Hard Drive - USB 3.0 ",
     price: 64,
     description:
@@ -175,7 +162,6 @@ const productList = [
   },
   {
     id: 10,
-    href: "#",
     title: "SanDisk SSD PLUS 1TB Internal SSD - SATA III 6 Gb/s",
     price: 109,
     description:
@@ -189,7 +175,6 @@ const productList = [
   },
   {
     id: 11,
-    href: "#",
     title:
       "Silicon Power 256GB SSD 3D NAND A55 SLC Cache Performance Boost SATA III 2.5",
     price: 109,
@@ -204,7 +189,6 @@ const productList = [
   },
   {
     id: 12,
-    href: "#",
     title:
       "WD 4TB Gaming Drive Works with Playstation 4 Portable External Hard Drive",
     price: 114,
@@ -219,7 +203,6 @@ const productList = [
   },
   {
     id: 13,
-    href: "#",
     title: "Acer SB220Q bi 21.5 inches Full HD (1920 x 1080) IPS Ultra-Thin",
     price: 599,
     description:
@@ -233,7 +216,6 @@ const productList = [
   },
   {
     id: 14,
-    href: "#",
     title:
       "Samsung 49-Inch CHG90 144Hz Curved Gaming Monitor (LC49HG90DMNXZA) – Super Ultrawide Screen QLED ",
     price: 999.99,
@@ -248,7 +230,6 @@ const productList = [
   },
   {
     id: 15,
-    href: "#",
     title: "BIYLACLESEN Women's 3-in-1 Snowboard Jacket Winter Coats",
     price: 56.99,
     description:
@@ -262,7 +243,6 @@ const productList = [
   },
   {
     id: 16,
-    href: "#",
     title:
       "Lock and Love Women's Removable Hooded Faux Leather Moto Biker Jacket",
     price: 29.95,
@@ -277,7 +257,6 @@ const productList = [
   },
   {
     id: 17,
-    href: "#",
     title: "Rain Jacket Women Windbreaker Striped Climbing Raincoats",
     price: 39.99,
     description:
@@ -291,7 +270,6 @@ const productList = [
   },
   {
     id: 18,
-    href: "#",
     title: "MBJ Women's Solid Short Sleeve Boat Neck V ",
     price: 9.85,
     description:
@@ -305,7 +283,6 @@ const productList = [
   },
   {
     id: 19,
-    href: "#",
     title: "Opna Women's Short Sleeve Moisture",
     price: 7.95,
     description:
@@ -319,7 +296,6 @@ const productList = [
   },
   {
     id: 20,
-    href: "#",
     title: "DANVOUY Womens T Shirt Casual Cotton Short",
     price: 12.99,
     description:
@@ -341,7 +317,7 @@ export const Home = () => {
 
           <div className="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
             {productList.map((product) => (
-              <a key={product.id} href={product.href} className="group">
+              <a key={product.id} href={`/products/${product.id}`} className="group">
                 <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-w-7 xl:aspect-h-8">
                   <img
                     src={product.image}

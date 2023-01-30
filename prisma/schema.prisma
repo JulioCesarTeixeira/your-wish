@@ -55,6 +55,7 @@ model User {
   sessions      Session[]
   profile       Profile?
   addresses     Address[]
+  Order         Order[]
 }
 
 // user profile model
@@ -107,22 +108,50 @@ enum AddressType {
   BILLING
 }
 
-model Product {
-  id          String     @id @default(cuid())
-  name        String
-  description String
-  price       Float
-  image       String
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
-  categories  Category[]
-}
-
 model Category {
   id          String    @id @default(cuid())
   name        String
-  description String
+  description String?
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
   products    Product[]
+}
+
+model Product {
+  id               String                    @id @default(cuid())
+  name             String
+  description      String
+  price            Float
+  image            String?
+  brand            String
+  rating           Int                       @default(0)
+  count            Int                       @default(0)
+  currentInventory Int
+  createdAt        DateTime                  @default(now())
+  updatedAt        DateTime?                 @updatedAt
+  category         Category?                 @relation(fields: [categoryId], references: [id])
+  categoryId       String?
+  order            Order?                    @relation(fields: [orderId], references: [id])
+  orderId          String?
+  availability     productAvailabilityStatus @default(IN_STOCK)
+
+  @@index([categoryId])
+  @@index([orderId])
+}
+
+enum productAvailabilityStatus {
+  IN_STOCK
+  OUT_OF_STOCK
+  PRE_ORDER
+}
+
+model Order {
+  id        String    @id @default(cuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  products  Product[]
+  user      User      @relation(fields: [userId], references: [id])
+  userId    String
+
+  @@index([userId])
 }
