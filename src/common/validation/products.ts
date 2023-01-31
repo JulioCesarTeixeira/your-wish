@@ -12,15 +12,14 @@ export const productSchema = z.object({
   name: z.string(),
   price: z.number(),
   description: z.string(),
-  categories: z.string().array(),
-  image: z.string().optional(),
-  rating: z.object({
-    rate: z.number(),
+  // categories: z.string().array(),
+  image: z.string().optional().nullable(),
+  rating: z.number(),
     count: z.number(),
-  }),
-  availability: z.nativeEnum(EProductAvailability),
+  availability: z.enum(["IN_STOCK", "OUT_OF_STOCK", "PRE_ORDER"]),
+  currentInventory: z.number(),
   createdAt: z.date(),
-  updatedAt: z.date().optional(),
+  updatedAt: z.date().optional().nullable(),
 });
 
 export type Product = z.infer<typeof productSchema>;
@@ -53,6 +52,18 @@ export const productUpdateSchema = z.object({
 });
 
 export type ProductUpdate = z.infer<typeof productUpdateSchema>;
+
+export const getProductByIdSchema = z.object({
+  id: z.string(),
+});
+
+export const getProductByCategoryIdSchema = z.object({
+  categoryId: z.string(),
+});
+
+export type GetProductByCategoryId = z.infer<typeof getProductByCategoryIdSchema>;
+
+export type GetProductById = z.infer<typeof getProductByIdSchema>;
 
 export const productDeleteSchema = z.object({
   id: z.string(),

@@ -40,7 +40,7 @@ const nextConfig = {
   swcMinify: true,
   images: {
     dangerouslyAllowSVG: true,
-    domains: ["tailwindui.com"],
+    domains: ["tailwindui.com", "loremflickr.com"],
   },
   async headers() {
     return [
