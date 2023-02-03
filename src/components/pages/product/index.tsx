@@ -122,7 +122,7 @@ export default function ProductPage({product}: {product: Product}) {
           {/* Options */}
           <div className="mt-4 lg:row-span-3 lg:mt-0">
             <h2 className="sr-only">Product information</h2>
-            <p className="text-3xl tracking-tight text-gray-900">{product.price}</p>
+            <p className="text-3xl tracking-tight text-gray-900">$ {product.price.toFixed(2)}</p>
 
             {/* Reviews */}
             <div className="mt-6">
@@ -141,9 +141,9 @@ export default function ProductPage({product}: {product: Product}) {
                   ))}
                 </div>
                 <p className="sr-only">{product.rating} out of 5 stars</p>
-                {/* <a href={reviews.href} className="ml-3 text-sm font-medium text-indigo-600 hover:text-indigo-500">
-                  {reviews.totalCount} reviews
-                </a> */}
+                <a href={product.id} className="ml-3 text-sm font-medium text-indigo-600 hover:text-indigo-500">
+                  {product.count} reviews
+                </a>
               </div>
             </div>
 

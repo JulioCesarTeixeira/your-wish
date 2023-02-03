@@ -28,11 +28,11 @@ const categoriesSeed = Array.from({ length: 5 }).map(() => ({
 const prisma = new PrismaClient();
 
 async function main() {
-  //   const products = await prisma.product.createMany({
-  //     data: productsSeed,
-  //     skipDuplicates: true,
-  //   });
-  // console.log(products);
+  const products = await prisma.product.createMany({
+    data: productsSeed,
+    skipDuplicates: true,
+  });
+  console.log(products);
 
   const categories = await prisma.category.createMany({
     data: categoriesSeed,
@@ -40,6 +40,19 @@ async function main() {
   });
   console.log(categories);
 }
+
+  // const getProductIds = await prisma.product.findMany({
+  //   select: {
+  //     id: true,
+  //   },
+  // });
+
+  // const getCategoryId = await prisma.category.findMany({
+  //   select: {
+  //     id: true,
+  //   },
+  // });
+
 
 main()
   .then((e) => {
