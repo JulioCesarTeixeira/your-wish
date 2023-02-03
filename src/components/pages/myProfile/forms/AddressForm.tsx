@@ -63,11 +63,6 @@ function AddressForm({ onSubmit }: Props) {
     await refetch();
   };
 
-  useEffect(() => {
-    if (addressesData && isSuccess) {
-      console.log("addressesData", addressesData.addresses[0].id);
-    }
-  }, [isSuccess, addressesData]);
 
   if (isLoading) return <LoadingComponent />;
 
