@@ -2,12 +2,12 @@
 import { faker } from "@faker-js/faker";
 import { PrismaClient } from "@prisma/client";
 
-const productsSeed = Array.from({ length: 100 }).map(() => ({
+const productsSeed = Array.from({ length: 5 }).map(() => ({
   name: faker.commerce.productName(),
   price: Number(faker.commerce.price()),
   description: faker.commerce.productDescription(),
   // categories: faker.commerce.department(),
-  image: faker.image.imageUrl(),
+  image: faker.image.imageUrl(undefined, undefined, "clothing", true),
   rating: faker.datatype.number({ min: 1, max: 5 }),
   count: faker.datatype.number({ min: 1, max: 1000 }),
   brand: faker.company.name(),
@@ -16,26 +16,29 @@ const productsSeed = Array.from({ length: 100 }).map(() => ({
   updatedAt: faker.date.recent(),
 }));
 
-const categoriesSeed = Array.from({ length: 20 }).map(() => ({
+const categoriesSeed = Array.from({ length: 5 }).map(() => ({
   name: faker.commerce.department(),
   createdAt: faker.date.past(),
   updatedAt: faker.date.recent(),
+  products: {
+    create: productsSeed
+  },
 }));
 
 const prisma = new PrismaClient();
 
 async function main() {
-    const products = await prisma.product.createMany({
-      data: productsSeed,
-      skipDuplicates: true,
-    });
-    console.log(products);
+  //   const products = await prisma.product.createMany({
+  //     data: productsSeed,
+  //     skipDuplicates: true,
+  //   });
+  // console.log(products);
 
-    const categories = await prisma.category.createMany({
-      data: categoriesSeed,
-      skipDuplicates: true,
-    });
-    console.log(categories);
+  const categories = await prisma.category.createMany({
+    data: categoriesSeed,
+    skipDuplicates: true,
+  });
+  console.log(categories);
 }
 
 main()
