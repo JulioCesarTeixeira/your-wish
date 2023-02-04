@@ -12,6 +12,9 @@ type ResponseData = {
   isEmailVerified: boolean;
 };
 
+/**
+ * Deprecated. Use tRPC server handlers
+ */
 export default function handler(
   req: NextApiRequest,
   res: NextApiResponse<ResponseData>

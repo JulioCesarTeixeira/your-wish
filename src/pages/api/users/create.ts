@@ -7,6 +7,9 @@ type RequestData = {
   credentials: Record<"email" | "password", string> | undefined;
 };
 
+/**
+ * Deprecated. Use tRPC server handlers.
+ */
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse

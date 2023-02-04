@@ -12,6 +12,9 @@ type ResponseData = {
   isEmailVerified: boolean;
 };
 
+/**
+ * Deprecated. Use tRPC server handlers
+ */
 export default function handler(
   req: NextApiRequest,
   res: NextApiResponse<ResponseData>
@@ -20,7 +23,7 @@ export default function handler(
 
   const { username, password } = credentials ?? {};
 
-  console.log("request received :", req.body);
+  console.log("request received: ", req.body);
   const user = {
     userId: 1,
     email: credentials?.username ?? "johndoe@gmail.com",
